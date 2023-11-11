@@ -1,0 +1,4 @@
+node_modules
+docker
+mongo
+package-lock.json

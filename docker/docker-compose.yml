@@ -1,0 +1,40 @@
+version: '3.1'
+
+services:
+
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - ./mongo:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongoadmin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+    ports:
+      - 27017:27017
+    networks: 
+        network_airportai:
+            ipv4_address: 172.21.35.10
+
+  airportai:
+    image: airportai
+    container_name: airportai
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    environment:
+      - DATABASE_URL=mongodb://mongoadmin:secret@172.21.35.10:27017/AirportAI?authMechanism=DEFAULT&authSource=admin
+    ports:
+      - 3000:3000
+    networks:
+      - network_airportai
+    restart: on-failure
+    depends_on:
+      - mongo
+
+networks:
+  network_airportai:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.21.35.0/24
