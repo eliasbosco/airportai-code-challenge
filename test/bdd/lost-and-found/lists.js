@@ -14,7 +14,7 @@ describe('Lost And Found', () => {
         return new Promise((done, reject) => {
             chai
                 .request(server)
-                .get(uri + '?limit=1')
+                .get(uri + '?brand=samsung')
                 .set('Content-Type', 'application/json')
                 .set('Authorization', 'agent')
                 .send()
@@ -39,7 +39,7 @@ describe('Lost And Found', () => {
         return new Promise((done, reject) => {
             chai
                 .request(server)
-                .get(uri + '/list-text-search?search=I lost my Samsung S4 phone')
+                .get(uri + '/list-text-search?search=I lost my Samsung S4')
                 .set('Content-Type', 'application/json')
                 .set('Authorization', 'user')
                 .send()
@@ -55,6 +55,35 @@ describe('Lost And Found', () => {
                     expect(jsonRes[0]?.type).to.be.equal('Phone');
                     expect(jsonRes[0]?.brand).to.be.equal('Samsung');
                     expect(jsonRes[0]?.color).to.be.equal('White');
+                    done();
+                });
+        });
+    });
+
+    it('As an agent, list searching by unexisting product', () => {
+        return new Promise((done, reject) => {
+            chai
+                .request(server)
+                .get(uri + '?brand=samsungblablabla')
+                .set('Content-Type', 'application/json')
+                .set('Authorization', 'agent')
+                .send()
+                .end((_, res) => {
+                    expect(res).to.have.status(404);
+                    done();
+                });
+        });
+    });
+
+    it('Unauthorised request', () => {
+        return new Promise((done, reject) => {
+            chai
+                .request(server)
+                .get(uri + '?brand=samsung')
+                .set('Content-Type', 'application/json')
+                .send()
+                .end((_, res) => {
+                    expect(res).to.have.status(401);
                     done();
                 });
         });
