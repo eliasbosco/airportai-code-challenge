@@ -86,22 +86,13 @@ class LostAndFound {
                 throw err;
             }
 
-            const search = this.query?.search.split(' ').map((val) => new RegExp(String(val), 'i'));
             const where = {
-                $or: [
-                    { name: search },
-                    { type: search },
-                    { brand: search },
-                    { color: search },
-                    { details: search },
-                ],
+                '$text': {
+                    '$search': String(this.query.search),
+                },
             };
 
-            if (this.lostTime) {
-                where['$and'] = [
-                    { lostTime: this.lostTime },
-                ];
-            }
+            this.lostTime ? where.lostTime = this.lostTime : delete where?.lostTime;
 
             const result = await productRepository.list({
                 skip: this.skip,

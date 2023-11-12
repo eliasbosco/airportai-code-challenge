@@ -13,5 +13,6 @@ const ProductSchema = new mongoose.Schema({
     color: String,
     lostTime: { type: Date, default: Date.now },
 });
+ProductSchema.index({'$**': 'text'});
 
 module.exports = mongoose.model('product', ProductSchema);

@@ -4,4 +4,3 @@ node_modules
 docker/mongo
 mongo
 package-lock.json
-
