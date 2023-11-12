@@ -1,0 +1,219 @@
+{
+	"info": {
+		"_postman_id": "bbdf4803-11dd-44bb-b7f8-98835c80b654",
+		"name": "AirportAI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2531324",
+		"_collection_link": "https://appihub.postman.co/workspace/New-Team-Workspace~c38f239e-757f-4c5c-9fc4-59d8863d2e12/collection/2531324-bbdf4803-11dd-44bb-b7f8-98835c80b654?action=share&source=collection_link&creator=2531324"
+	},
+	"item": [
+		{
+			"name": "Hello World",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "agent",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api/v1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List All",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "agent",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/lost-and-found?lostTime=2023-11-11&lostTimeEnd=2023-11-12",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"lost-and-found"
+					],
+					"query": [
+						{
+							"key": "lostTime",
+							"value": "2023-11-11"
+						},
+						{
+							"key": "lostTimeEnd",
+							"value": "2023-11-12"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Text Search",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "user",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/lost-and-found/list-text-search?search=I lost my Samsung S4 phone",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"lost-and-found",
+						"list-text-search"
+					],
+					"query": [
+						{
+							"key": "skip",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "0",
+							"disabled": true
+						},
+						{
+							"key": "search",
+							"value": "I lost my Samsung S4 phone"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "agent",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Gibson Guitar\",\n    \"description\": \"Last time I saw my guitar it was on its own black hard case, on top of the starbucks cashier desk\",\n    \"type\": \"Electric Guitar\",\n    \"brand\": \"Gibson\",\n    \"color\": \"Black\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/lost-and-found",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"lost-and-found"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "agent",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Gibson Guitar 3\",\n    \"description\": \"Last time I saw my guitar it was on its own black hard case, on top of the starbucks cashier desk 3\",\n    \"type\": \"Electric Guitar 3\",\n    \"brand\": \"Gibson 3\",\n    \"color\": \"Black 3\",\n    \"lostTime\": \"2023-11-11T18:19:50.000Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/lost-and-found/654fc5b42da4f3ceb6bded81",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"lost-and-found",
+						"654fc5b42da4f3ceb6bded81"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "agent",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/lost-and-found/654fc5b42da4f3ceb6bded81",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"lost-and-found",
+						"654fc5b42da4f3ceb6bded81"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
