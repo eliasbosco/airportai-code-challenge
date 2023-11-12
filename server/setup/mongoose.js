@@ -36,7 +36,7 @@ function setup() {
   mongoose.connection.on('reconnected', () => console.info('MongoDB reconnected!'));
   mongoose.connection.on('close', () => console.info('MongoDB closed!'));
 
-  return connectToDb();
+  connectToDb();
 };
 
 

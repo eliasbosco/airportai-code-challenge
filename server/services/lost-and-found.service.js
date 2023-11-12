@@ -24,14 +24,89 @@ class LostAndFound {
         this.query = req?.query;
         this.params = req?.params;
         this.body = req?.body;
+
+        // Sanatize limit in case more than 200 records is requested
+        this.limit = parseInt(this.query?.limit);
+        this.limit = this.limit > 200 ? 200 : this.limit;
+        this.skip = this.query?.skip ? parseInt(this.query?.skip) : 0;
+
+        this.lostTime = this.query?.lostTime 
+            ? {
+                $gte: new Date(this.query.lostTime).toISOString(),
+                $lt: this.query?.lostTimeEnd
+                    ? `${this.query.lostTimeEnd}T23:59:59.999Z`
+                    : `${this.query.lostTime}T23:59:59.999Z`,
+            }
+            : null;
+
         return this;
     }
 
-    static async listAll() {
+    static async list() {
         try {
             console.info(`Starting ${currentScriptName} -> LostAndFound.listAll()`);
+
+            const where = {};
+            this.query?.name ? where.name = new RegExp(String(this.query?.name), 'i') : delete where?.name;
+            this.query?.type ? where.type = new RegExp(String(this.query?.type), 'i') : delete where?.type;
+            this.query?.brand ? where.brand = new RegExp(String(this.query?.brand), 'i') : delete where?.brand;
+            this.query?.color ? where.color = new RegExp(String(this.query?.color), 'i') : delete where?.color;
+
+            this.lostTime ? where.lostTime = this.lostTime : delete where.lostTime;
+
             const result = await productRepository.list({
-                limit: parseInt(LostAndFound.query?.limit) || 100,
+                skip: this.skip,
+                limit: this.limit,
+                where,
+            });
+
+            if (!result || !result.length) {
+                const err = new Error('No such record');
+                err.status = 404;
+                throw err;
+            }
+
+            return result;
+
+        } catch (err) {
+            console.error(err);
+            throw err;
+        } finally {
+            console.info(`Finishing ${currentScriptName} -> LostAndFound.listAll()`);
+        }
+    }
+
+    static async listTextSearch() {
+        try {
+            console.info(`Starting ${currentScriptName} -> LostAndFound.listAll()`);
+
+            if (!this.query?.search) {
+                const err = new Error('Search text is required');
+                err.status = 500;
+                throw err;
+            }
+
+            const search = this.query?.search.split(' ').map((val) => new RegExp(String(val), 'i'));
+            const where = {
+                $or: [
+                    { name: search },
+                    { type: search },
+                    { brand: search },
+                    { color: search },
+                    { details: search },
+                ],
+            };
+
+            if (this.lostTime) {
+                where['$and'] = [
+                    { lostTime: this.lostTime },
+                ];
+            }
+
+            const result = await productRepository.list({
+                skip: this.skip,
+                limit: this.limit,
+                where,
             });
 
             if (!result || !result.length) {
@@ -65,7 +140,16 @@ class LostAndFound {
     static async update() {
         try {
             console.info(`Starting ${currentScriptName} -> LostAndFound.update()`);
-            return await productRepository.update(LostAndFound.params?.id, LostAndFound.body);
+
+            const result = await productRepository.update(LostAndFound.params?.id, LostAndFound.body);
+
+            if (!result || !result.length) {
+                const err = new Error('No such record');
+                err.status = 404;
+                throw err;
+            }
+
+            return result;
         } catch (err) {
             console.error(err);
             throw err;

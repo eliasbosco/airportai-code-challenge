@@ -14,7 +14,7 @@ const {
 } = require('../helpers/authorization');
 
 const AGENT_PERMISSION = ['agent'];
-const USER_PERMISSION = ['user'];
+const ALL_PERMISSION = ['agent', 'user'];
 
 /**
  * List all products, limit is optional
@@ -24,8 +24,30 @@ const USER_PERMISSION = ['user'];
 const list = async (req, res) => {
     try {
         console.info(`Starting ${currentScriptName} -> list()`);
-        checkAuthorization(AGENT_PERMISSION, req);
-        const result = await LostAndFound.factory(req).listAll();
+        // Permission
+        checkAuthorization(ALL_PERMISSION, res);
+        const result = await LostAndFound.factory(req).list();
+
+        res.send(result);
+    } catch (err) {
+        getCatchErrorMessage(err, res);
+    } finally {
+        res.end();
+        console.info(`Finishing ${currentScriptName} -> list()`);
+    }
+};
+
+/**
+ * List all products, limit is optional
+ * @param {Express.Request} req 
+ * @param {Express.Response} res 
+ */
+const listTextSearch = async (req, res) => {
+    try {
+        console.info(`Starting ${currentScriptName} -> list()`);
+        // Permission
+        checkAuthorization(ALL_PERMISSION, res);
+        const result = await LostAndFound.factory(req).listTextSearch();
 
         res.send(result);
     } catch (err) {
@@ -44,7 +66,7 @@ const list = async (req, res) => {
 const create = async (req, res) => {
     try {
         console.info(`Starting ${currentScriptName} -> create()`);
-        checkAuthorization(AGENT_PERMISSION, req);
+        checkAuthorization(AGENT_PERMISSION, res);
 
         res.send(await LostAndFound.factory(req).create());
     } catch (err) {
@@ -63,7 +85,7 @@ const create = async (req, res) => {
 const update = async (req, res) => {
     try {
         console.info(`Starting ${currentScriptName} -> update()`);
-        checkAuthorization(AGENT_PERMISSION, req);
+        checkAuthorization(AGENT_PERMISSION, res);
 
         res.send(await LostAndFound.factory(req).update());
     } catch (err) {
@@ -82,7 +104,7 @@ const update = async (req, res) => {
 const deleteOne = async (req, res) => {
     try {
         console.info(`Starting ${currentScriptName} -> deleteOne()`);
-        checkAuthorization(AGENT_PERMISSION, req);
+        checkAuthorization(AGENT_PERMISSION, res);
 
         res.send(await LostAndFound.factory(req).delete());
     } catch (err) {
@@ -95,6 +117,7 @@ const deleteOne = async (req, res) => {
 
 module.exports = {
     list,
+    listTextSearch,
     create,
     update,
     deleteOne,

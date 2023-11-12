@@ -10,15 +10,16 @@ const Product = require('../models');
 
 /**
  * List products
- * @param {*} params 
- * @returns 
+ * @param {any} params 
+ * @returns {Array<mongoose.Model>}
  */
 const list = async (params = {}) => {
     try {
         console.info(`Starting ${currentScriptName} -> list()`);
         return await Product
-            .find({})
-            .limit(params?.limit || 100)
+            .find(params?.where)
+            .skip(params?.skip || 0)
+            .limit(params?.limit || 200)
             .sort({ lostTime: -1 })
             .exec();
     } catch (err) {
@@ -28,6 +29,11 @@ const list = async (params = {}) => {
     }
 };
 
+/**
+ * Creates a new product
+ * @param {mongoose.Model} data 
+ * @returns {mongoose.Model}
+ */
 const create = async (data) => {
     try {
         console.info(`Starting ${currentScriptName} -> create()`);
@@ -40,6 +46,12 @@ const create = async (data) => {
     }
 };
 
+/**
+ * Update an existing product by id
+ * @param {number} id 
+ * @param {mongoose.Model} data 
+ * @returns {mongoose.Model}
+ */
 const update = async (id, data) => {
     try {
         console.info(`Starting ${currentScriptName} -> update()`);
@@ -51,6 +63,11 @@ const update = async (id, data) => {
     }
 };
 
+/**
+ * Remove an existing product by id
+ * @param {number} id 
+ * @returns {any}
+ */
 const deleteOne = async (id) => {
     try {
         console.info(`Starting ${currentScriptName} -> deleteOne()`);
